@@ -6,8 +6,10 @@
 #include "GameFramework/Character.h"
 #include "VRCharacter.generated.h"
 
+
 class UCameraComponent;
 class USceneComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class VR_ARCHITECTURE_API AVRCharacter : public ACharacter
@@ -32,9 +34,20 @@ public:
 
 private:
 	//Classe UEngine
+	
+	UPROPERTY()
 	 UCameraComponent* Camera;
 
+	UPROPERTY()
 	 USceneComponent* VRRoot;
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* DestinationMarker;
+
+	UPROPERTY(EditAnywhere)
+	float MaxTeleportDistance = 1000;
+
+	void UpdateDestinationMarker();
 
 
 public:
@@ -43,4 +56,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Move")
 	void MoveRight(float throttle);
+
+	
 };
