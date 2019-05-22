@@ -1,3 +1,4 @@
 /Content/VRBluePrints filter=lfs diff=lfs merge=lfs -text
 /Content/Maps filter=lfs diff=lfs merge=lfs -text
 /Content/BluePrints filter=lfs diff=lfs merge=lfs -text
+Content/ArchVizAssets filter=lfs diff=lfs merge=lfs -text
