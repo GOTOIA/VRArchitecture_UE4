@@ -7,6 +7,7 @@
 #include "VRCharacter.generated.h"
 
 class UCameraComponent;
+class USceneComponent;
 
 UCLASS()
 class VR_ARCHITECTURE_API AVRCharacter : public ACharacter
@@ -32,6 +33,8 @@ public:
 private:
 	//Classe UEngine
 	 UCameraComponent* Camera;
+
+	 USceneComponent* VRRoot;
 
 
 public:
