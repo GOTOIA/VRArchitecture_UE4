@@ -45,7 +45,7 @@ private:
 	UStaticMeshComponent* DestinationMarker;
 
 	UPROPERTY(EditAnywhere)
-	float MaxTeleportDistance = 1000;
+	float MaxTeleportDistance = 1000.f;
 
 	void UpdateDestinationMarker();
 
