@@ -47,6 +47,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MaxTeleportDistance = 1000.f;
 
+	UPROPERTY(EditAnywhere)
+	float TeleportFadeTime = 1;
+
 	void UpdateDestinationMarker();
 
 
@@ -57,5 +60,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Move")
 	void MoveRight(float throttle);
 
+
+	void BeginTeleport();
+
+	void FinishTeleport();
 	
 };
