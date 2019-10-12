@@ -50,8 +50,12 @@ private:
 	UPROPERTY(EditAnywhere)
 	float TeleportFadeTime = 1;
 
+	UPROPERTY(EditAnywhere)
+	FVector TeleportProjectionExtent = FVector(100, 100, 100);
+
 	void UpdateDestinationMarker();
 
+	bool FindTeleportDestination(FVector &OutLocation);
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Move")
@@ -64,5 +68,7 @@ public:
 	void BeginTeleport();
 
 	void FinishTeleport();
+
+	void StartFade(float FromAlpha, float ToAlpha);
 	
 };
