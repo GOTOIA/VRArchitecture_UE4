@@ -21,6 +21,7 @@ AVRCharacter::AVRCharacter()
 	//Create Root Component
 	VRRoot = CreateDefaultSubobject<USceneComponent>(TEXT("VRRoot"));
 	VRRoot->SetupAttachment(GetRootComponent());
+	
 
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -72,8 +73,7 @@ bool AVRCharacter::FindTeleportDestination(FVector &OutLocation)
 	if (!bHit) return false;
 
 	FNavLocation NavLocation;
-	//TODO Fix
-	//bool bOnNavMesh = GetWorld()->GetNavigationSystem()->ProjectPointToNavigation(HitResult.Location, NavLocation, TeleportProjectionExtent);
+	
 
 	UNavigationSystemV1* NavSystem = Cast<UNavigationSystemV1>(GetWorld()->GetNavigationSystem());
 	bool bHitNav = false;
