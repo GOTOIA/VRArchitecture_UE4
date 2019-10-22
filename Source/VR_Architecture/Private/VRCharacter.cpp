@@ -7,6 +7,8 @@
 #include "TimerManager.h"
 #include "Components/CapsuleComponent.h"
 #include "NavigationSystem.h"
+#include "Components/PostProcessComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 
 
@@ -30,6 +32,9 @@ AVRCharacter::AVRCharacter()
 	DestinationMarker = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
 	DestinationMarker->SetupAttachment(GetRootComponent());
 
+	PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
+	PostProcessComponent->SetupAttachment(GetRootComponent());
+
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +42,14 @@ void AVRCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	DestinationMarker->SetVisibility(false);
+
+	if (BlinkerMaterialBase != nullptr)
+	{
+		BlinkerMaterialInstance = UMaterialInstanceDynamic::Create(BlinkerMaterialBase, this);
+		PostProcessComponent->AddOrUpdateBlendable(BlinkerMaterialInstance);
+
+		BlinkerMaterialInstance->SetScalarParameterValue(TEXT("Radius"), 0.2);
+	}
 	
 }
 

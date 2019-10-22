@@ -7,9 +7,14 @@
 #include "VRCharacter.generated.h"
 
 
+
 class UCameraComponent;
 class USceneComponent;
 class UStaticMeshComponent;
+class UPostProcessComponent;
+class UMaterialInstanceDynamic;
+class UMaterialInterface;
+
 
 UCLASS()
 class VR_ARCHITECTURE_API AVRCharacter : public ACharacter
@@ -57,12 +62,25 @@ private:
 
 	bool FindTeleportDestination(FVector &OutLocation);
 
+	UPROPERTY()
+		UPostProcessComponent *PostProcessComponent;
+
+	UPROPERTY()
+		UMaterialInstanceDynamic* BlinkerMaterialInstance;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface * BlinkerMaterialBase;
+
+
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Move")
 	void MoveForward(float throttle);
 
 	UFUNCTION(BlueprintCallable, Category = "Move")
 	void MoveRight(float throttle);
+
+	
 
 
 	void BeginTeleport();
