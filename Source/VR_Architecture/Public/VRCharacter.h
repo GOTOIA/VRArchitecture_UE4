@@ -78,6 +78,10 @@ private:
 	void UpdateBlinkers();
 
 
+	FVector2D GetBlinkerCentre();
+	
+
+
 
 
 private :

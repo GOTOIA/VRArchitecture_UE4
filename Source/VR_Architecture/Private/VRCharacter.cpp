@@ -107,6 +107,7 @@ bool AVRCharacter::FindTeleportDestination(FVector &OutLocation)
 	return true;
 }
 
+//Maj du rayon de vue
 void AVRCharacter::UpdateBlinkers()
 {
 	if (RadiusVsVelocity == nullptr) return;
@@ -116,6 +117,44 @@ void AVRCharacter::UpdateBlinkers()
 
 	BlinkerMaterialInstance->SetScalarParameterValue(TEXT("Radius"), Radius);
 
+	FVector2D Centre = GetBlinkerCentre();
+	BlinkerMaterialInstance->SetVectorParameterValue(TEXT("Center"), FLinearColor(Centre.X, Centre.Y, 0));
+
+}
+
+FVector2D AVRCharacter::GetBlinkerCentre()
+{
+	FVector MovementDirection = GetVelocity().GetSafeNormal();
+	if (MovementDirection.IsNearlyZero())
+	{
+		return FVector2D(0.5, 0.5);
+	}
+
+	FVector WorldStationaryLocation;
+	if (FVector::DotProduct(Camera->GetForwardVector(), MovementDirection) > 0)
+	{
+		WorldStationaryLocation = Camera->GetComponentLocation() + MovementDirection * 1000;
+	}
+	else
+	{
+		WorldStationaryLocation = Camera->GetComponentLocation() - MovementDirection * 1000;
+	}
+
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (PC == nullptr)
+	{
+		return FVector2D(0.5, 0.5);
+	}
+
+	FVector2D ScreenStationaryLocation;
+	PC->ProjectWorldLocationToScreen(WorldStationaryLocation, ScreenStationaryLocation);
+
+	int32 SizeX, SizeY;
+	PC->GetViewportSize(SizeX, SizeY);
+	ScreenStationaryLocation.X /= SizeX;
+	ScreenStationaryLocation.Y /= SizeY;
+
+	return ScreenStationaryLocation;
 }
 
 void AVRCharacter::UpdateDestinationMarker()
