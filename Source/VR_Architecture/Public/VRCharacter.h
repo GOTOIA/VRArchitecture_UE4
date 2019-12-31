@@ -58,10 +58,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	FVector TeleportProjectionExtent = FVector(100, 100, 100);
 
-	void UpdateDestinationMarker();
-
-	bool FindTeleportDestination(FVector &OutLocation);
-
 	UPROPERTY()
 		UPostProcessComponent *PostProcessComponent;
 
@@ -72,15 +68,25 @@ private:
 		UMaterialInterface * BlinkerMaterialBase;
 
 
+	UPROPERTY(EditAnywhere)
+		class UCurveFloat* RadiusVsVelocity;
 
-public:
-	UFUNCTION(BlueprintCallable, Category = "Move")
-	void MoveForward(float throttle);
+	void UpdateDestinationMarker();
 
-	UFUNCTION(BlueprintCallable, Category = "Move")
-	void MoveRight(float throttle);
+	bool FindTeleportDestination(FVector &OutLocation);
+
+	void UpdateBlinkers();
+
+
+
+
+private :
 
 	
+	void MoveForward(float throttle);
+
+
+	void MoveRight(float throttle);
 
 
 	void BeginTeleport();
