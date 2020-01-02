@@ -81,7 +81,10 @@ private:
 	FVector2D GetBlinkerCentre();
 	
 
-
+	UPROPERTY()
+		class UMotionControllerComponent* LeftController;
+	UPROPERTY()
+		class UMotionControllerComponent* RightController;
 
 
 private :
