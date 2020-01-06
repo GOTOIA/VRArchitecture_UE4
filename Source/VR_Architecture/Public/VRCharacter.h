@@ -14,6 +14,8 @@ class UStaticMeshComponent;
 class UPostProcessComponent;
 class UMaterialInstanceDynamic;
 class UMaterialInterface;
+class UCurveFloat;
+class UMotionControllerComponent;
 
 
 UCLASS()
@@ -50,13 +52,19 @@ private:
 	UStaticMeshComponent* DestinationMarker;
 
 	UPROPERTY(EditAnywhere)
-	float MaxTeleportDistance = 1000.f;
+	float TeleportProjectileRadius;
 
 	UPROPERTY(EditAnywhere)
-	float TeleportFadeTime = 1;
+		float TeleportProjectileSpeed;
 
 	UPROPERTY(EditAnywhere)
-	FVector TeleportProjectionExtent = FVector(100, 100, 100);
+		float TeleportSimulationTime;
+
+	UPROPERTY(EditAnywhere)
+	float TeleportFadeTime;
+
+	UPROPERTY(EditAnywhere)
+	FVector TeleportProjectionExtent;
 
 	UPROPERTY()
 		UPostProcessComponent *PostProcessComponent;
@@ -69,7 +77,7 @@ private:
 
 
 	UPROPERTY(EditAnywhere)
-		class UCurveFloat* RadiusVsVelocity;
+		UCurveFloat* RadiusVsVelocity;
 
 	void UpdateDestinationMarker();
 
@@ -82,9 +90,9 @@ private:
 	
 
 	UPROPERTY()
-		class UMotionControllerComponent* LeftController;
+		UMotionControllerComponent* LeftController;
 	UPROPERTY()
-		class UMotionControllerComponent* RightController;
+		UMotionControllerComponent* RightController;
 
 
 private :

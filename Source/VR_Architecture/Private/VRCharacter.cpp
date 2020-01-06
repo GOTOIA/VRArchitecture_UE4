@@ -10,6 +10,7 @@
 #include "Components/PostProcessComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "MotionControllerComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 
@@ -20,6 +21,14 @@ AVRCharacter::AVRCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	TeleportProjectileRadius = 10.f;
+	TeleportProjectileSpeed = 800.f;
+	TeleportSimulationTime = 2.f;
+	TeleportFadeTime = 1.f;
+
+	TeleportProjectionExtent = FVector(100, 100, 100);
+
 
 	//Create Root Component
 	VRRoot = CreateDefaultSubobject<USceneComponent>(TEXT("VRRoot"));
@@ -55,7 +64,7 @@ void AVRCharacter::BeginPlay()
 	Super::BeginPlay();
 	DestinationMarker->SetVisibility(false);
 
-	if (BlinkerMaterialBase != nullptr)
+	if (ensure(BlinkerMaterialBase != nullptr))
 	{
 		BlinkerMaterialInstance = UMaterialInstanceDynamic::Create(BlinkerMaterialBase, this);
 		PostProcessComponent->AddOrUpdateBlendable(BlinkerMaterialInstance);
@@ -90,12 +99,20 @@ bool AVRCharacter::FindTeleportDestination(FVector &OutLocation)
 {
 	FVector Start = RightController->GetComponentLocation();
 	FVector Look = RightController->GetForwardVector();
-	Look = Look.RotateAngleAxis(30, RightController->GetRightVector());
-	FVector End = Start + Look * MaxTeleportDistance;
+	
+	FPredictProjectilePathParams Params(
+		TeleportProjectileRadius,
+		Start,
+		Look * TeleportProjectileSpeed,
+		TeleportSimulationTime,
+		ECollisionChannel::ECC_Visibility,
+		this
+	);
+	Params.DrawDebugType = EDrawDebugTrace::ForOneFrame;
+	Params.bTraceComplex = true;
+	FPredictProjectilePathResult Result;
+	bool bHit = UGameplayStatics::PredictProjectilePath(this, Params, Result);
 
-
-	FHitResult HitResult;
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
 
 	if (!bHit) return false;
 
@@ -105,10 +122,10 @@ bool AVRCharacter::FindTeleportDestination(FVector &OutLocation)
 	UNavigationSystemV1* NavSystem = Cast<UNavigationSystemV1>(GetWorld()->GetNavigationSystem());
 	bool bHitNav = false;
 
-	if (NavSystem != nullptr) {
+	if (ensure(NavSystem != nullptr)) {
 		bHitNav = NavSystem->ProjectPointToNavigation
 		(
-			HitResult.Location,
+			Result.HitResult.Location,
 			NavLocation,
 			TeleportProjectionExtent
 		);
@@ -124,7 +141,8 @@ bool AVRCharacter::FindTeleportDestination(FVector &OutLocation)
 //Maj du rayon de vue
 void AVRCharacter::UpdateBlinkers()
 {
-	if (RadiusVsVelocity == nullptr) return;
+	if (!ensure(RadiusVsVelocity != nullptr)) return;
+	
 
 	float Speed = GetVelocity().Size();
 	float Radius = RadiusVsVelocity->GetFloatValue(Speed);
